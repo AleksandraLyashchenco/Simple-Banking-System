@@ -12,9 +12,9 @@ class Account: # обьявляю класс (имя - "Аккаунт")
      
 
 def create():#обьявляю метод 
-    Account.card_number = int('400000' + str(int(random.randint(1000000000, 9999999999))))#присваиваю значение атрибуту card_number
-    Account.pin = random.randint(1111, 9999)#присваиваю значение атрибуту pin
-    account = Account(Account.card_number, Account.pin)
+    card_number = int('400000' + str(int(random.randint(1000000000, 9999999999))))#присваиваю значение атрибуту card_number
+    pin = random.randint(1111, 9999)#присваиваю значение атрибуту pin
+    account = Account(card_number, pin)
     Account.all_accounts.append(Account.account)#добавляю список account в список all_account
 
 
