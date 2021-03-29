@@ -24,5 +24,5 @@ while n < 10:# "пока n меньше 10":
     n += 1# шаг 1
 print(Account.all_accounts)#печатать all_accounts
 
-for Account.account in Account.all_accounts:#для каждого елемента account в списке all_accounts:
-    print(str(Account.account.card_number) + ' = ' + str(Account.account.pin))# печатать " первый элемент = третий элемент"
+for account in Account.all_accounts:#для каждого елемента account в списке all_accounts:
+    print(str(account.card_number) + ' = ' + str(account.pin))# печатать " первый элемент = третий элемент"
