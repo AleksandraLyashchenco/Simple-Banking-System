@@ -14,7 +14,7 @@ class Account:
 
 
 def create():
-    Account.card_number = int('400000' + str(int(random.random() * 1000000000)))
+    Account.card_number = int('400000' + str(int(random.randint(1000000000, 9999999999))))
     Account.pin = random.randint(1111, 9999)
     Account.account = [Account.card_number, Account.pin, Account.balance]
     Account.all_accounts.append(Account.account)
