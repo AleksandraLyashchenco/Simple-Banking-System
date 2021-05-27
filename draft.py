@@ -3,7 +3,7 @@ def sum_sum(a, b):
 
 
 def mul(a, b):
-    return summ(a, b) * b
+    return sum_sum(a, b) * b
 
 
 def sub(a, b):
