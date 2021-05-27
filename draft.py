@@ -22,9 +22,11 @@ def to_lower_case(d):
     return d.lower()
 
 
-print(sum_sum(2, 3))
-print(mul(2,3))
-print(sub(2, 7))
-print(pow_pow(2, 5))
+x = 2
+y = 3
+print(sum_sum(x, y))
+print(mul(x, y))
+print(sub(x, y))
+print(pow_pow(x, y))
 print(to_upper_case('PpPpPpPp'))
 print(to_lower_case('SsSsSsSSS'))
