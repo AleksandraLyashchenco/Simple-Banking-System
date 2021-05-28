@@ -121,3 +121,5 @@ while answer != 0:
 print('Bye!')
 
 
+INSERT INTO card (number, pin, balance) VALUES (4000002053271001, 4627, 0);
+
