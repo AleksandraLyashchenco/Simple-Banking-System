@@ -16,3 +16,8 @@ def mul(a, b):
 
 d = mul(x, y)
 print(d)
+
+
+INSERT INTO cats (name, age) VALUES ('Felix', 3);
+
+INSERT INTO card (id, number, pin, balance) VALUES (str(id), str(account.card_number), str(account.pin), str(account.balance));
