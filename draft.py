@@ -1,18 +1,18 @@
-a = 5
-b = 3
+x = 5
+y = 3
 
 
-def sum_sum (a, b):
-    return a + b
+def sum_sum (x, y):
+    return x + y
 
 
-def mul(a, b):
+def mul(x, y):
     c = 1
-    d = a
-    while c < b:
-        d = sum_sum(d, a)
-        c += 1
+    d = x
+    while c < y:
+        d = sum_sum(d, x)
+        c = sum_sum(c, 1)
     return d
 
-d = mul( a, b)
+d = mul(x, y)
 print(d)
