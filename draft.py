@@ -13,11 +13,10 @@ conn.commit()
 
 
 def save_account(account):
-    insert = 'INSERT INTO card (number, pin, balance) VALUES (' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
+    insert = 'INSERT INTO card (number, pin, balance) VALUES (' + str(F"{account.card_number}") + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
     print(insert)
-    insert_into_card = cursor.execute(insert)
-    return insert_into_card
-
+    cursor.execute(insert)
+    conn.commit()
 
 
 class Account:
@@ -119,6 +118,4 @@ while answer != 0:
         else:
             answer = welcome()
 print('Bye!')
-
-
 
