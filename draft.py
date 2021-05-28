@@ -12,10 +12,8 @@ cursor.execute('CREATE TABLE card ( id INTEGER PRIMARY KEY AUTOINCREMENT, number
 conn.commit()
 
 
-print('INSERT INTO card (id, number, pin, balance) VALUES (' + 'str(id)' + ', ' + 'str(account.card_number)' + ', ' + 'str(account.pin)'  + ', ' + 'str(account.balance)' + ');')
-
-
 def save_account(account):
+    print('INSERT INTO card (id, number, pin, balance) VALUES (' + str(id) + ', ' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');')
     insert_into_card = cursor.execute('INSERT INTO card (id, number, pin, balance) VALUES (' + str(id) + ', ' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');')
     return insert_into_card
 
@@ -120,4 +118,5 @@ while answer != 0:
         else:
             answer = welcome()
 print('Bye!')
+
 
