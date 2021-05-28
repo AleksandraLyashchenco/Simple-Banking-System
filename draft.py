@@ -13,7 +13,8 @@ conn.commit()
 
 
 def save_account(account):
-    print('INSERT INTO card (id, number, pin, balance) VALUES (' + str(id) + ', ' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');')
+    insert = 'INSERT INTO card (id, number, pin, balance) VALUES (' + str(id) + ', ' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
+    print(insert)
     insert_into_card = cursor.execute('INSERT INTO card (id, number, pin, balance) VALUES (' + str(id) + ', ' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');')
     return insert_into_card
 
