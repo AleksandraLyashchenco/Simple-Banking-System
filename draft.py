@@ -124,7 +124,7 @@ def view_account():
                         print('Probably you made a mistake in the card number. Please try again!')
                         a = account_menu()
                     elif luhn_chek(num_for_transf) == 1:
-                        cursor.execute('SELECT id FROM cards WHERE number = ' + str(num_for_transf))
+                        cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
                         id = cursor.fetchall()
                         if len(id) == 0:
                             print(id)
