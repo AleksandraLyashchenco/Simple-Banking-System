@@ -69,6 +69,27 @@ def account_menu():
     return a
 
 
+def luhn_chek(num_for_transf):
+    card_number = list(str(num_for_transf))
+    c = list.copy(card_number)
+    for i in range(len(c)):
+        old_value = c[i]
+        new_value = int(old_value)
+        c[i] = new_value
+    for index, i in enumerate(c):
+        if index % 2 == 0:
+            i = i * 2
+        c[index] = i
+        if c[index] > 9:
+            c[index] = c[index] - 9
+    a = 0
+    if sum(c) % 10 > 0:
+        ans = 0
+    else:
+        ans = 1
+    return ans
+
+
 def view_account():
     print('Enter your card number:')
     card_number = int(input())
@@ -93,8 +114,27 @@ def view_account():
                     print('Income was added!')
                     a = account_menu()
                 elif a == 3:
-                    print("написать код transfer")
-                    break
+                    print('Transfer')
+                    print('Enter card number:')
+                    num_for_transf = int(input())
+                    if num_for_transf == card_number:
+                        print("You can't transfer money to the same account!")
+                        a = account_menu()
+                    elif luhn_chek(num_for_transf) == 0:
+                        print('Probably you made a mistake in the card number. Please try again!')
+                        a = account_menu()
+                    elif luhn_chek(num_for_transf) == 1:
+                        cursor.execute('SELECT id FROM cards WHERE number = ' + str(num_for_transf))
+                        id = cursor.fetchall()
+                        if id is None:
+                            print(id)
+                            print('Такой карты в таблице нету')
+                        else:
+                            print('Enter how much money you want to transfer:')
+                            transfer_funds = int(input())
+                    else:
+                        print("Пока что все ок")
+
                 elif a == 4:
                     cursor.execute('DELETE FROM card WHERE number =' + str(account.card_number))
                     conn.commit()
@@ -125,6 +165,19 @@ cursor.execute('CREATE TABLE card ( id INTEGER PRIMARY KEY AUTOINCREMENT, number
 conn.commit()
 
 answer = welcome()
+
+while answer != 0:
+    if answer == 1:
+        create(conn, cursor)
+        answer = welcome()
+    elif answer == 2:
+        a = view_account()
+        if a == 0:
+            break
+        else:
+            answer = welcome()
+print('Bye!')
+
 
 while answer != 0:
     if answer == 1:
