@@ -90,6 +90,52 @@ def luhn_chek(num_for_transf):
     return ans
 
 
+def transfer(a, card_number, account):
+    print('Transfer')
+    print('Enter card number:')
+    num_for_transf = int(input())
+    if num_for_transf == card_number:
+        print("You can't transfer money to the same account!")
+        a = account_menu()
+    elif luhn_chek(num_for_transf) == 0:
+        print('Probably you made a mistake in the card number. Please try again!')
+        a = account_menu()
+    elif luhn_chek(num_for_transf) == 1:
+        cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
+        id = cursor.fetchall()
+        if len(id) == 0:
+            print(id)
+            print('Such a card does not exist.')
+        else:
+            print(id)
+            print('Enter how much money you want to transfer:')
+            transfer_funds = int(input())
+            if transfer_funds > account.balance:
+                print('Not enough money!')
+            else:
+                print('тут должен быть код перевода')
+    else:
+        print("Пока что все ок")
+
+
+def income(account):
+    print("Enter income:")
+    income = int(input())
+    account.balance = account.balance + income
+    print(account.balance)
+    cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE number =' + str(account.card_number))
+    conn.commit()
+    print('Income was added!')
+    
+    
+def delete_account(account):
+    cursor.execute('DELETE FROM card WHERE number =' + str(account.card_number))
+    conn.commit()
+    Account.all_accounts.remove(account)
+    print('The account has been closed!')
+    print('')
+
+
 def view_account():
     print('Enter your card number:')
     card_number = int(input())
@@ -105,47 +151,13 @@ def view_account():
                     print(account.balance)
                     a = account_menu()
                 elif a == 2:
-                    print("Enter income:")
-                    income = int(input())
-                    account.balance = account.balance + income
-                    print(account.balance)
-                    cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE number =' + str(account.card_number))
-                    conn.commit()
-                    print('Income was added!')
+                    income(account)
                     a = account_menu()
                 elif a == 3:
-                    print('Transfer')
-                    print('Enter card number:')
-                    num_for_transf = int(input())
-                    if num_for_transf == card_number:
-                        print("You can't transfer money to the same account!")
-                        a = account_menu()
-                    elif luhn_chek(num_for_transf) == 0:
-                        print('Probably you made a mistake in the card number. Please try again!')
-                        a = account_menu()
-                    elif luhn_chek(num_for_transf) == 1:
-                        cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
-                        id = cursor.fetchall()
-                        if len(id) == 0:
-                            print(id)
-                            print('Such a card does not exist.')
-                        else:
-                            print(id)
-                            print('Enter how much money you want to transfer:')
-                            transfer_funds = int(input())
-                            if transfer_funds > account.balance:
-                                print('Not enough money!')
-                            else:
-                                print('Тут написать код перевода средств')
-                    else:
-                        print("Пока что все ок")
-
+                    transfer(a, card_number, account)
+                    a = account_menu()
                 elif a == 4:
-                    cursor.execute('DELETE FROM card WHERE number =' + str(account.card_number))
-                    conn.commit()
-                    Account.all_accounts.remove(account)
-                    print('The account has been closed!')
-                    print('')
+                    delete_account(account)
                     break
                 elif a == 5:
                     print('You have successfully logged out!')
@@ -182,4 +194,3 @@ while answer != 0:
         else:
             answer = welcome()
 print('Bye!')
-
