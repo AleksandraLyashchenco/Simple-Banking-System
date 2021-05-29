@@ -126,10 +126,11 @@ def view_account():
                     elif luhn_chek(num_for_transf) == 1:
                         cursor.execute('SELECT id FROM cards WHERE number = ' + str(num_for_transf))
                         id = cursor.fetchall()
-                        if id is None:
+                        if len(id) == 0:
                             print(id)
                             print('Такой карты в таблице нету')
                         else:
+                            print(id)
                             print('Enter how much money you want to transfer:')
                             transfer_funds = int(input())
                     else:
@@ -178,15 +179,3 @@ while answer != 0:
             answer = welcome()
 print('Bye!')
 
-
-while answer != 0:
-    if answer == 1:
-        create(conn, cursor)
-        answer = welcome()
-    elif answer == 2:
-        a = view_account()
-        if a == 0:
-            break
-        else:
-            answer = welcome()
-print('Bye!')
