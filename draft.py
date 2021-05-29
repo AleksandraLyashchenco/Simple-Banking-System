@@ -128,11 +128,13 @@ def view_account():
                         id = cursor.fetchall()
                         if len(id) == 0:
                             print(id)
-                            print('Такой карты в таблице нету')
+                            print('Such a card does not exist.')
                         else:
                             print(id)
                             print('Enter how much money you want to transfer:')
                             transfer_funds = int(input())
+                            if transfer_funds > account.balance:
+                                print('Not enough money!')
                     else:
                         print("Пока что все ок")
 
