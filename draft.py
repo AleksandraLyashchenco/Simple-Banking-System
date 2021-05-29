@@ -135,6 +135,8 @@ def view_account():
                             transfer_funds = int(input())
                             if transfer_funds > account.balance:
                                 print('Not enough money!')
+                            else:
+                                print('Тут написать код перевода средств')
                     else:
                         print("Пока что все ок")
 
