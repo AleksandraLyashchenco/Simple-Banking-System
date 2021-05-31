@@ -107,18 +107,22 @@ def transfer(card_number, account):
         menu_item = account_menu()
     elif luhn_chek(num_for_transf) == 1:
         cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
-        id = cursor.fetchall()
-        if len(id) == 0:
-            print(id)
+        id_exists = cursor.fetchall()
+        if len(id_exists) == 0:
+            print(id_exists)
             print('Such a card does not exist.')
         else:
-            print(id)
+            print(id_exists)
             print('Enter how much money you want to transfer:')
             transfer_funds = int(input())
             if transfer_funds > account.balance:
                 print('Not enough money!')
             else:
-                print('тут должен быть код перевода')
+                account.balance = account.balance - transfer_funds
+                cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE id =' + str(id_exists))
+                conn.commit()
+                print(account.balance)
+                print('баланс изменен на счету отправителя')
     else:
         print("Пока что все ок")
 
@@ -149,30 +153,25 @@ def view_account():
     print('')
     for account in Account.all_accounts:
         if account in Account.all_accounts:
-            if card_number and pin in account:
-                print('You have successfully logged in!')
-                menu_item = account_menu()
-                while menu_item != 0:
-                    if menu_item == 1:
-                        print(account.balance)
-                        menu_item = account_menu()
-                    elif menu_item == 2:
-                        income(account)
-                        menu_item = account_menu()
-                    elif menu_item == 3:
-                        transfer(menu_item, card_number)
-                        menu_item = account_menu()
-                    elif menu_item == 4:
-                        delete_account(account)
-                        break
-                    elif menu_item == 5:
-                        print('You have successfully logged out!')
-                        welcome()
-            else:
-                print('Wrong card number or PIN!')
-                print('')
-                menu_item = 'wrong'
-                return menu_item
+            print(account.pin)
+            print('You have successfully logged in!')
+            menu_item = account_menu()
+            while menu_item != 0:
+                if menu_item == 1:
+                    print(account.balance)
+                    menu_item = account_menu()
+                elif menu_item == 2:
+                    income(account)
+                    menu_item = account_menu()
+                elif menu_item == 3:
+                    transfer(menu_item, card_number)
+                    menu_item = account_menu()
+                elif menu_item == 4:
+                    delete_account(account)
+                    break
+                elif menu_item == 5:
+                    print('You have successfully logged out!')
+                    welcome()
         else:
             print('Wrong card number or PIN!')
             print('')
