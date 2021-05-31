@@ -101,10 +101,10 @@ def transfer(card_number, account):
     num_for_transf = int(input())
     if num_for_transf == card_number:
         print("You can't transfer money to the same account!")
-        menu_item = account_menu()
+        account_menu()
     elif luhn_chek(num_for_transf) == 0:
         print('Probably you made a mistake in the card number. Please try again!')
-        menu_item = account_menu()
+        account_menu()
     elif luhn_chek(num_for_transf) == 1:
         cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
         id_exists = cursor.fetchall()
