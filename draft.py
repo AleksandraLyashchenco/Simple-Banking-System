@@ -11,7 +11,7 @@ class Account:
         self.pin = pin
         self.balance = 0
         
-        
+
 # def refer_to_database(query, account):
 #    query = 'INSERT INTO card (number, pin, balance) VALUES (' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
 #    cursor.execute(query)
@@ -34,21 +34,21 @@ def save_account(conn, cursor, account):
 
 def create(conn, cursor):
     card_number = list('400000' + str(int(random.randint(100000000, 999999999))))
-    c = list.copy(card_number)
-    for i in range(len(c)):
-        old_value = c[i]
+    copy_card_number = list.copy(card_number)
+    for i in range(len(copy_card_number)):
+        old_value = copy_card_number[i]
         new_value = int(old_value)
-        c[i] = new_value
-    for index, i in enumerate(c):
+        copy_card_number[i] = new_value
+    for index, i in enumerate(copy_card_number):
         if index % 2 == 0:
             i = i * 2
-        c[index] = i
-        if c[index] > 9:
-            c[index] = c[index] - 9
-    a = 0
-    if sum(c) % 10 > 0:
-        a = abs(10 - (sum(c) % 10))
-    card_number.append(a)
+        copy_card_number[index] = i
+        if copy_card_number[index] > 9:
+            copy_card_number[index] = copy_card_number[index] - 9
+    last_number = 0
+    if sum(copy_card_number) % 10 > 0:
+        last_number = abs(10 - (sum(copy_card_number) % 10))
+    card_number.append(last_number)
     card_number = int("".join(map(str, card_number)))
     pin = random.randint(1111, 9999)
     account = Account(card_number, pin)
@@ -71,25 +71,24 @@ def account_menu():
     print('4. Close account')
     print('5. Log out')
     print('0. Exit')
-    a = int(input())
-    return a
+    selected_item = int(input())
+    return selected_item
 
 
 def luhn_chek(num_for_transf):
     card_number = list(str(num_for_transf))
-    c = list.copy(card_number)
-    for i in range(len(c)):
-        old_value = c[i]
+    copy_card_number = list.copy(card_number)
+    for i in range(len(copy_card_number)):
+        old_value = copy_card_number[i]
         new_value = int(old_value)
-        c[i] = new_value
-    for index, i in enumerate(c):
+        copy_card_number[i] = new_value
+    for index, i in enumerate(copy_card_number):
         if index % 2 == 0:
             i = i * 2
-        c[index] = i
-        if c[index] > 9:
-            c[index] = c[index] - 9
-    a = 0
-    if sum(c) % 10 > 0:
+        copy_card_number[index] = i
+        if copy_card_number[index] > 9:
+            copy_card_number[index] = copy_card_number[index] - 9
+    if sum(copy_card_number) % 10 > 0:
         ans = 0
     else:
         ans = 1
@@ -106,16 +105,16 @@ def transf_to_recipient_account(num_for_transf, transfer_funds):
             account_menu()
 
 
-def transfer(a, card_number, account):
+def transfer(selected_item, card_number, account):
     print('Transfer')
     print('Enter card number:')
     num_for_transf = int(input())
     if num_for_transf == card_number:
         print("You can't transfer money to the same account!")
-        a = account_menu()
+        selected_item = account_menu()
     elif luhn_chek(num_for_transf) == 0:
         print('Probably you made a mistake in the card number. Please try again!')
-        a = account_menu()
+        selected_item = account_menu()
     elif luhn_chek(num_for_transf) == 1:
         cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
         id_exists = cursor.fetchall()
@@ -169,33 +168,33 @@ def view_account():
     for account in Account.all_accounts:
         if account in Account.all_accounts:
             print('You have successfully logged in!')
-            a = account_menu()
-            while a != 0:
-                if a == 1:
+            selected_item = account_menu()
+            while selected_item != 0:
+                if selected_item == 1:
                     print(account.balance)
-                    a = account_menu()
-                elif a == 2:
+                    selected_item = account_menu()
+                elif selected_item == 2:
                     income(account)
-                    a = account_menu()
-                elif a == 3:
-                    transfer(a, card_number, account)
-                    a = account_menu()
-                elif a == 4:
+                    selected_item = account_menu()
+                elif selected_item == 3:
+                    transfer(selected_item, card_number, account)
+                    selected_item = account_menu()
+                elif selected_item == 4:
                     delete_account(account)
                     break
-                elif a == 5:
+                elif selected_item == 5:
                     print('You have successfully logged out!')
                     break
         else:
             print('Wrong card number or PIN!')
             print('')
-            a = 'wrong'
-            return a
+            selected_item = 'wrong'
+            return selected_item
     else:
         print('Wrong card number or PIN!')
         print('')
-        a = 'wrong'
-        return a
+        selected_item = 'wrong'
+        return selected_item
 
 
 conn = sqlite3.connect('card.s3db')
@@ -212,8 +211,8 @@ while answer != 0:
         create(conn, cursor)
         answer = welcome()
     elif answer == 2:
-        a = view_account()
-        if a == 0:
+        selected_item = view_account()
+        if selected_item == 0:
             break
         else:
             answer = welcome()
