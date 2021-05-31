@@ -10,6 +10,12 @@ class Account:
         self.card_number = card_number
         self.pin = pin
         self.balance = 0
+        
+        
+# def refer_to_database(query, account):
+#    query = 'INSERT INTO card (number, pin, balance) VALUES (' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
+#    cursor.execute(query)
+#    conn.commit()
 
 
 def welcome():
@@ -89,6 +95,16 @@ def luhn_chek(num_for_transf):
         ans = 1
     return ans
 
+def transf_to_recipient_account(num_for_transf, transfer_funds):
+    for account in Account.all_accounts:
+        if account.card_number == num_for_transf:
+            account.balance = account.balance + transfer_funds
+            cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE number =' + str(account.card_number))
+            conn.commit()
+            print(account.balance)
+            print('Success!')
+            account_menu()
+
 
 def transfer(a, card_number, account):
     print('Transfer')
@@ -102,18 +118,26 @@ def transfer(a, card_number, account):
         a = account_menu()
     elif luhn_chek(num_for_transf) == 1:
         cursor.execute('SELECT id FROM card WHERE number = ' + str(num_for_transf))
-        id = cursor.fetchall()
-        if len(id) == 0:
-            print(id)
+        id_exists = cursor.fetchall()
+        if len(id_exists) == 0:
+            print(id_exists)
             print('Such a card does not exist.')
         else:
-            print(id)
+            print(id_exists)
+            print(id_exists[0][0])
             print('Enter how much money you want to transfer:')
             transfer_funds = int(input())
             if transfer_funds > account.balance:
                 print('Not enough money!')
             else:
+                account.balance = account.balance - transfer_funds
+                cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE id =' + str(id_exists[0][0]))
+                conn.commit()
+                print(account.balance)
+                print('баланс изменен на счету отправителя')
                 print('тут должен быть код перевода')
+                transf_to_recipient_account(num_for_transf, transfer_funds)
+
     else:
         print("Пока что все ок")
 
@@ -126,8 +150,8 @@ def income(account):
     cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE number =' + str(account.card_number))
     conn.commit()
     print('Income was added!')
-    
-    
+
+
 def delete_account(account):
     cursor.execute('DELETE FROM card WHERE number =' + str(account.card_number))
     conn.commit()
