@@ -10,7 +10,7 @@ class Account:
         self.card_number = card_number
         self.pin = pin
         self.balance = 0
-        
+
 
 # def refer_to_database(query, account):
 #    query = 'INSERT INTO card (number, pin, balance) VALUES (' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
@@ -171,7 +171,9 @@ def view_account():
             selected_item = account_menu()
             while selected_item != 0:
                 if selected_item == 1:
-                    print(account.balance)
+                    cursor.execute('SELECT balance FROM card WHERE number = ' + str(account.card_number))
+                    balance = cursor.fetchall()
+                    print(balance[0][0])
                     selected_item = account_menu()
                 elif selected_item == 2:
                     income(account)
