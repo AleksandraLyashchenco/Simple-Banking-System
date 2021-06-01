@@ -11,11 +11,23 @@ class Account:
         self.pin = pin
         self.balance = 0
 
+    def output(self, transfer):
+        self.balance = self.balance - transfer
 
-# def refer_to_database(query, account):
-#    query = 'INSERT INTO card (number, pin, balance) VALUES (' + str(account.card_number) + ', ' + str(account.pin) + ', ' + str(account.balance) + ');'
-#    cursor.execute(query)
-#    conn.commit()
+    def income(self, transfer):
+        self.balance = self.balance + transfer
+
+
+    def insert(self, conn):
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO card (number, pin, balance) VALUES (' + str(self.card_number) + ', ' + str(self.pin) + ', ' + str(self.balance) + ')')
+        conn.commit()
+
+
+    def update(self, conn):
+        cursor = conn.cursor()
+        cursor.execute('UPDATE card SET balance = ' + str(self.balance) + ' WHERE number =' + str(self.card_number))
+        conn.commit()
 
 
 def welcome():
@@ -71,8 +83,8 @@ def account_menu():
     print('4. Close account')
     print('5. Log out')
     print('0. Exit')
-    menu_item = int(input())
-    return menu_item
+    selected_item = int(input())
+    return selected_item
 
 
 def luhn_chek(num_for_transf):
@@ -94,6 +106,15 @@ def luhn_chek(num_for_transf):
         ans = 1
     return ans
 
+def transf_to_recipient_account(num_for_transf, transfer_funds):
+    for account in Account.all_accounts:
+        if card_number == num_for_transf:
+            account.income(transfer_funds)
+            account.update()
+    cursor.execute('SELECT balance FROM card WHERE number = ' + str(num_for_transf))
+    balance = cursor.fetchall()
+    print(balance)
+
 
 def transfer(card_number, account):
     print('Transfer')
@@ -113,16 +134,18 @@ def transfer(card_number, account):
             print('Such a card does not exist.')
         else:
             print(id_exists)
+            print(id_exists[0][0])
             print('Enter how much money you want to transfer:')
             transfer_funds = int(input())
             if transfer_funds > account.balance:
                 print('Not enough money!')
             else:
-                account.balance = account.balance - transfer_funds
-                cursor.execute('UPDATE card SET balance = ' + str(account.balance) + ' WHERE id =' + str(id_exists))
-                conn.commit()
-                print(account.balance)
+                account.output(transfer_funds)
+                account.update()
                 print('баланс изменен на счету отправителя')
+                print('тут должен быть код перевода')
+                transf_to_recipient_account(num_for_transf, transfer_funds)
+
     else:
         print("Пока что все ок")
 
@@ -153,30 +176,33 @@ def view_account():
     print('')
     for account in Account.all_accounts:
         if account in Account.all_accounts:
-            print(account.pin)
             print('You have successfully logged in!')
-            menu_item = account_menu()
-            while menu_item != 0:
-                if menu_item == 1:
-                    print(account.balance)
-                    menu_item = account_menu()
-                elif menu_item == 2:
+            selected_item = account_menu()
+            while selected_item != 0:
+                if selected_item == 1:
+                    cursor.execute('SELECT balance FROM card WHERE number = ' + str(account.card_number))
+                    balance = cursor.fetchall()
+                    print(balance[0][0])
+                    selected_item = account_menu()
+                elif selected_item == 2:
                     income(account)
-                    menu_item = account_menu()
-                elif menu_item == 3:
-                    transfer(menu_item, card_number)
-                    menu_item = account_menu()
-                elif menu_item == 4:
+                    selected_item = account_menu()
+                elif selected_item == 3:
+                    transfer(selected_item, card_number,)
+                    selected_item = account_menu()
+                elif selected_item == 4:
                     delete_account(account)
                     break
-                elif menu_item == 5:
+                elif selected_item == 5:
                     print('You have successfully logged out!')
-                    welcome()
+                    print('')
+                    break
+
         else:
             print('Wrong card number or PIN!')
             print('')
-            menu_item = 'wrong'
-            return menu_item
+            selected_item = 'wrong'
+            return selected_item
 
 
 conn = sqlite3.connect('card.s3db')
@@ -193,8 +219,8 @@ while answer != 0:
         create(conn, cursor)
         answer = welcome()
     elif answer == 2:
-        a = view_account()
-        if a == 0:
+        selected_item = view_account()
+        if selected_item == 0 or selected_item == 4 or selected_item == 5:
             break
         else:
             answer = welcome()
