@@ -25,9 +25,9 @@ class Account:
         conn.commit()
 
 
-    def update(conn, replaceable_variable, var_replac_value, known_vapiable, var_known_value):
+    def update(self, conn):
         cursor = conn.cursor()
-        cursor.execute('UPDATE card SET ' + str(replaceable_variable) + ' = ' + str(var_replac_value) + ' WHERE ' + str(known_vapiable) + ' = ' + str(var_known_value))
+        cursor.execute('UPDATE card SET balance = ' + str(self.balance) + ' WHERE number =' + str(self.card_number))      
         conn.commit()
         
     
