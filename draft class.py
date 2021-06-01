@@ -19,9 +19,9 @@ class Account:
         self.balance = self.balance + transfer
         
         
-    def insert(conn, card_number, pin, balance):
-        query = 'INSERT INTO card (number, pin, balance) VALUES (' + str(card_number) + ', ' + str(pin) + ', ' + str(balance) + ')'
-        cursor.execute(query)
+    def insert(self, conn):
+        cursor.execute('INSERT INTO card (number, pin, balance) VALUES (' + str(self.card_number) + ', ' + str(self.pin) + ', ' + str(self.balance) + ')')
+        cursor = cursor = conn.cursor()
         conn.commit()
 
 
