@@ -20,14 +20,14 @@ class Account:
         
         
     def insert(self, conn):
-        cursor.execute('INSERT INTO card (number, pin, balance) VALUES (' + str(self.card_number) + ', ' + str(self.pin) + ', ' + str(self.balance) + ')')
         cursor = conn.cursor()
+        cursor.execute('INSERT INTO card (number, pin, balance) VALUES (' + str(self.card_number) + ', ' + str(self.pin) + ', ' + str(self.balance) + ')')
         conn.commit()
 
 
     def update(conn, replaceable_variable, var_replac_value, known_vapiable, var_known_value):
-        cursor.execute('UPDATE card SET ' + str(replaceable_variable) + ' = ' + str(var_replac_value) + ' WHERE ' + str(known_vapiable) + ' = ' + str(var_known_value))
         cursor = conn.cursor()
+        cursor.execute('UPDATE card SET ' + str(replaceable_variable) + ' = ' + str(var_replac_value) + ' WHERE ' + str(known_vapiable) + ' = ' + str(var_known_value))
         conn.commit()
         
     
