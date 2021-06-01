@@ -19,10 +19,15 @@ class Account:
         self.balance = self.balance + transfer
         
         
-    def insert(conn)
-         #insert    
-    
-    def update(conn)
+    def insert(conn, card_number, pin, balance):
+        query = 'INSERT INTO card (number, pin, balance) VALUES (' + str(card_number) + ', ' + str(pin) + ', ' + str(balance) + ')'
+        cursor.execute(query)
+        conn.commit()
+
+
+    def update(conn, replaceable_variable, var_replac_value, known_vapiable, var_known_value):
+        cursor.execute('UPDATE card SET ' + str(replaceable_variable) + ' = ' + str(var_replac_value) + ' WHERE ' + str(known_vapiable) + ' = ' + str(var_known_value))
+        conn.commit()
         
     
 
