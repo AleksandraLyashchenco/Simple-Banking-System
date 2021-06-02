@@ -27,6 +27,17 @@ class Account:
         cursor.execute('UPDATE card SET balance = ' + str(self.balance) + ' WHERE number =' + str(self.card_number))
         conn.commit()
 
+    def data_check(self, card_number, pin):
+        for account in Account.all_accounts:
+            if self.card_number == card_number:
+                if self.pin == pin:
+                    return True
+            else:
+                print('не нашло аккаунт')
+
+
+
+
 
 def welcome():
     print('1. Create an account')
@@ -58,7 +69,7 @@ def create_card_number():
 
 
 def create_account(conn):
-    create_card_number()
+    card_number = create_card_number()
     pin = random.randint(1111, 9999)
     account = Account(card_number, pin)
     Account.all_accounts.append(account)
@@ -70,6 +81,9 @@ def create_account(conn):
     print('Your card PIN:')
     print(account.pin)
     print('')
+    print(Account.all_accounts)
+    return account
+
 
 
 def account_menu():
@@ -80,6 +94,7 @@ def account_menu():
     print('0. Exit')
     menu_item = int(input())
     return menu_item
+
 
 def income(account):
     print("Enter income:")
@@ -97,28 +112,24 @@ def view_account():
     pin = int(input())
     print('')
     for account in Account.all_accounts:
-        if card_number == account.card_number:
-            if pin == account.pin:
-                print('You have successfully logged in!')
-                menu_item = account_menu()
-                while menu_item != 0:
-                    if menu_item == 1:
-                        print(account.balance)
-                        menu_item = account_menu()
-                    elif menu_item == 2:
-                        income(account)
-                        menu_item = account_menu()
-                    elif menu_item == 5:
-                        print('You have successfully logged out!')
-                        break
-            else:
-                print('Wrong card number or PIN!')
-                menu_item = 'wrong'
-            return menu_item
+        if account.data_check(card_number, pin) is True:
+            print('You have successfully logged in!')
+            menu_item = account_menu()
+            while menu_item != 0:
+                if menu_item == 1:
+                    print(account.balance)
+                    menu_item = account_menu()
+                elif menu_item == 2:
+                    income(account)
+                    menu_item = account_menu()
+                elif menu_item == 5:
+                    print('You have successfully logged out!')
+                    break
         else:
             print('Wrong card number or PIN!')
             menu_item = 'wrong'
             return menu_item
+
 
 
 conn = sqlite3.connect('card.s3db')
@@ -132,7 +143,7 @@ answer = welcome()
 
 while answer != 0:
     if answer == 1:
-        create(conn)
+        create_account(conn)
         answer = welcome()
     elif answer == 2:
         menu_item = view_account()
