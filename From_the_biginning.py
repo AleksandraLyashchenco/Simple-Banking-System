@@ -29,11 +29,10 @@ class Account:
 
     def data_check(self, card_number, pin):
         for account in Account.all_accounts:
-            if self.card_number == card_number:
-                if self.pin == pin:
-                    return True
+            if self.card_number == card_number and self.pin == pin:
+                return True
             else:
-                print('не нашло аккаунт')
+                return False
 
 
 
