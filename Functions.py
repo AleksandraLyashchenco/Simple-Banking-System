@@ -26,6 +26,14 @@ class Account:
         cursor = conn.cursor()
         cursor.execute('UPDATE card SET balance = ' + str(self.balance) + ' WHERE number =' + str(self.card_number))
         conn.commit()
+        
+    def data_check(self, card_number, pin):
+        for account in Account.all_accounts:
+            if self.card_number == card_number:
+                if self.pin == pin:
+                    return True
+            else:
+                print('не нашло аккаунт')
 
 
 
